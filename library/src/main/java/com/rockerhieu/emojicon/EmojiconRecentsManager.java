@@ -28,13 +28,14 @@ import android.content.SharedPreferences;
 * @author Daniele Ricci
 */
 public class EmojiconRecentsManager extends ArrayList<Emojicon> {
-
+    private static final String DELIMITER = ",";
     private static final String PREFERENCE_NAME = "emojicon";
     private static final String PREF_RECENTS = "recent_emojis";
     private static final String PREF_PAGE = "recent_page";
 
     private static final Object LOCK = new Object();
     private static EmojiconRecentsManager sInstance;
+    private static int maximumSize = 40;
 
     private Context mContext;
 
@@ -74,6 +75,11 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
     @Override
     public boolean add(Emojicon object) {
         boolean ret = super.add(object);
+
+        while (this.size() > EmojiconRecentsManager.maximumSize) {
+            super.remove(0);
+        }
+
         saveRecents();
         return ret;
     }
@@ -81,6 +87,17 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
     @Override
     public void add(int index, Emojicon object) {
         super.add(index, object);
+
+        if (index == 0) {
+            while (this.size() > EmojiconRecentsManager.maximumSize) {
+                super.remove(EmojiconRecentsManager.maximumSize);
+            }
+        } else {
+            while (this.size() > EmojiconRecentsManager.maximumSize) {
+                super.remove(0);
+            }
+        }
+
         saveRecents();
     }
 
@@ -98,15 +115,9 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
     private void loadRecents() {
         SharedPreferences prefs = getPreferences();
         String str = prefs.getString(PREF_RECENTS, "");
-        StringTokenizer tokenizer = new StringTokenizer(str, "#");
+        StringTokenizer tokenizer = new StringTokenizer(str, EmojiconRecentsManager.DELIMITER);
         while (tokenizer.hasMoreTokens()) {
-            try {
-                int codepoint = Integer.parseInt(tokenizer.nextToken());
-                add(Emojicon.fromCodePoint(codepoint));
-            }
-            catch (NumberFormatException e) {
-                // ignored
-            }
+            add(Emojicon.fromChars(tokenizer.nextToken()));
         }
     }
 
@@ -115,13 +126,16 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
         int c = size();
         for (int i = 0; i < c; i++) {
             Emojicon e = get(i);
-            str.append(e.getEmoji().codePointAt(0));
+            str.append(e.getEmoji());
             if (i < (c - 1)) {
-                str.append('#');
+                str.append(EmojiconRecentsManager.DELIMITER);
             }
         }
         SharedPreferences prefs = getPreferences();
         prefs.edit().putString(PREF_RECENTS, str.toString()).commit();
     }
 
+    public static void setMaximumSize(int maximumSize) {
+        EmojiconRecentsManager.maximumSize = maximumSize;
+    }
 }
