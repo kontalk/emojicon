@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.rockerhieu.emojicon.EmojiconsView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:background="@drawable/keyboard_background_holo"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
@@ -131,4 +132,4 @@
     android:layout_height="1px"
     android:layout_below="@id/emojis_tab"
     android:background="@color/horizontal_divider" />
-</RelativeLayout>
+</com.rockerhieu.emojicon.EmojiconsView>

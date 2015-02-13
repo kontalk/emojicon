@@ -51,7 +51,7 @@ class EmojiAdapter extends ArrayAdapter<Emojicon> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
             v = View.inflate(getContext(), R.layout.emojicon_item, null);

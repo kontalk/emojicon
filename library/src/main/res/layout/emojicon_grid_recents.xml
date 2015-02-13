@@ -14,7 +14,7 @@
   ~ ITS DERIVATIVES.
   -->
 
-<com.rockerhieu.emojicon.EmojiconGridView
+<com.rockerhieu.emojicon.EmojiconRecentsGridView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/Emoji_GridView"
     android:layout_width="match_parent"
@@ -25,5 +25,4 @@
     android:horizontalSpacing="0dip"
     android:numColumns="auto_fit"
     android:scrollbars="vertical"
-    android:verticalSpacing="0dip"
-    android:descendantFocusability="afterDescendants" />
+    android:verticalSpacing="0dip" />
