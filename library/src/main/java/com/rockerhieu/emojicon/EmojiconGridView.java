@@ -50,36 +50,34 @@ public class EmojiconGridView extends GridView implements AdapterView.OnItemClic
 
     public EmojiconGridView(Context context) {
         super(context);
-        init();
     }
 
     public EmojiconGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public EmojiconGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public EmojiconGridView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
     protected void init(Emojicon[] data) {
-        setAdapter(new EmojiAdapter(getContext(), data, mUseSystemDefault));
+        init(new EmojiAdapter(getContext(), data, mUseSystemDefault));
     }
 
     protected void init(List<Emojicon> data) {
-        setAdapter(new EmojiAdapter(getContext(), data, mUseSystemDefault));
+        init(new EmojiAdapter(getContext(), data, mUseSystemDefault));
     }
 
-    private void init() {
-        setOnItemClickListener(this);
+    private void init(EmojiAdapter adapter) {
+        // this doesn't work -- setOnItemClickListener(this);
+        adapter.setOnItemClickListener(this);
+        setAdapter(adapter);
     }
 
     public void setUseSystemDefault(boolean useSystemDefault) {
@@ -96,22 +94,13 @@ public class EmojiconGridView extends GridView implements AdapterView.OnItemClic
             mOnEmojiconClickedListener.onEmojiconClicked((Emojicon) getItemAtPosition(position));
         }
         if (mRecents != null) {
-            mRecents.addRecentEmoji(view.getContext(),
+            mRecents.addRecentEmoji(getContext(),
                 (Emojicon) getItemAtPosition(position));
         }
-    }
-
-    @Override
-    public boolean onCheckIsTextEditor() {
-        //return true;
-        return super.onCheckIsTextEditor();
     }
 
     private void setRecents(EmojiconRecents recents) {
         mRecents = recents;
     }
 
-    public interface OnEmojiconClickedListener {
-        void onEmojiconClicked(Emojicon emojicon);
-    }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 
@@ -29,6 +30,7 @@ import com.rockerhieu.emojicon.emoji.Emojicon;
  */
 class EmojiAdapter extends ArrayAdapter<Emojicon> {
     private boolean mUseSystemDefault = false;
+    private AdapterView.OnItemClickListener mListener;
 
     public EmojiAdapter(Context context, List<Emojicon> data) {
         super(context, R.layout.emojicon_item, data);
@@ -50,14 +52,28 @@ class EmojiAdapter extends ArrayAdapter<Emojicon> {
         mUseSystemDefault = useSystemDefault;
     }
 
+    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
+        mListener = listener;
+    }
+
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
             v = View.inflate(getContext(), R.layout.emojicon_item, null);
             ViewHolder holder = new ViewHolder();
+            holder.position = position;
             holder.icon = (EmojiconTextView) v.findViewById(R.id.emojicon_icon);
             holder.icon.setUseSystemDefault(mUseSystemDefault);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        ViewHolder holder = (ViewHolder) v.getTag();
+                        mListener.onItemClick(null, null, holder.position, -1);
+                    }
+                }
+            });
             v.setTag(holder);
         }
         Emojicon emoji = getItem(position);
@@ -67,6 +83,7 @@ class EmojiAdapter extends ArrayAdapter<Emojicon> {
     }
 
     class ViewHolder {
+        int position;
         EmojiconTextView icon;
     }
 }
