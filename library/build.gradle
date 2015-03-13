@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 
 ext.emojiconVersionName = "1.1-SNAPSHOT"
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName emojiconVersionName
     }
