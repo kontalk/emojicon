@@ -7,8 +7,6 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 22
-        versionCode 1
-        versionName emojiconVersionName
     }
     lintOptions {
         abortOnError false
