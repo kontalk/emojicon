@@ -123,8 +123,7 @@ public class EmojiconsView extends RelativeLayout implements ViewPager.OnPageCha
 
         if (page == 0) {
             onPageSelected(page);
-        }
-        else {
+        } else {
             emojisPager.setCurrentItem(page, false);
         }
     }

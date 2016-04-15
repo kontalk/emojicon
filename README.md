@@ -1,3 +1,5 @@
+[![Android Gems](http://www.android-gems.com/badge/rockerhieu/emojicon.svg?branch=master)](http://www.android-gems.com/lib/rockerhieu/emojicon)
+
 ![master on Travis CI](https://travis-ci.org/rockerhieu/emojicon.png?branch=master) ![emojicon on Maven Central](https://maven-badges.herokuapp.com/maven-central/com.rockerhieu.emojicon/library/badge.svg)
 
 ## Emojicon
@@ -44,6 +46,7 @@ _Note: You can change the size and alignment of emojis in XML layout through att
 
 * `EmojiconTextView`: a `TextView` which can render emojis.
 * `EmojiconEditText`: a `EditText` which can render emojis.
+* `EmojiconMultiAutoCompleteTextView`: a `MultiAutoCompleteTextView` which can render emojis.
 * `EmojiconGridFragment`: a fragment contains emojis in a `GridView` for the user to choose.
 * `EmojiconsFragment`: a fragment contains many set of emojis for the user to choose.
 
@@ -54,8 +57,6 @@ Via Gradle:
 ```
 compile 'com.rockerhieu.emojicon:library:<latest-version>'
 ```
-
-Releases can be found on either Maven Central or [Emojicon's Releases](https://github.com/rockerhieu/emojicon/releases/)
 
 ## Building in Eclipse
 
