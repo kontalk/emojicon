@@ -137,7 +137,7 @@ public class EmojiconsView extends RelativeLayout implements ViewPager.OnPageCha
         mOnEmojiconBackspaceClickedListener = listener;
     }
 
-    public void setOnEmojiconClickedListener(EmojiconGridView.OnEmojiconClickedListener listener) {
+    public void setOnEmojiconClickedListener(OnEmojiconClickedListener listener) {
         mEmojisAdapter.setOnEmojiconClickedListener(listener);
     }
 
@@ -204,7 +204,7 @@ public class EmojiconsView extends RelativeLayout implements ViewPager.OnPageCha
             this.views = views;
         }
 
-        public void setOnEmojiconClickedListener(EmojiconGridView.OnEmojiconClickedListener listener) {
+        public void setOnEmojiconClickedListener(OnEmojiconClickedListener listener) {
             for (EmojiconGridView view : views) {
                 view.setOnEmojiconClickedListener(listener);
             }
