@@ -16,18 +16,8 @@
 
 package com.rockerhieu.emojicon;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.*;
-import android.widget.EditText;
+import java.util.Arrays;
+import java.util.List;
 
 import com.rockerhieu.emojicon.emoji.Emojicon;
 import com.rockerhieu.emojicon.emoji.Nature;
@@ -36,54 +26,74 @@ import com.rockerhieu.emojicon.emoji.People;
 import com.rockerhieu.emojicon.emoji.Places;
 import com.rockerhieu.emojicon.emoji.Symbols;
 
-import java.util.Arrays;
-import java.util.List;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.database.DataSetObserver;
+import android.os.Build;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 /**
- * @author Hieu Rocker (rockerhieu@gmail.com).
+ * @author Daniele Ricci (daniele.athome@gmail.com).
  */
-public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChangeListener, EmojiconRecents {
+public class EmojiconsView extends RelativeLayout implements ViewPager.OnPageChangeListener, EmojiconRecents {
     private OnEmojiconBackspaceClickedListener mOnEmojiconBackspaceClickedListener;
     private int mEmojiTabLastSelectedIndex = -1;
     private View[] mEmojiTabs;
-    private PagerAdapter mEmojisAdapter;
+    private EmojisPagerAdapter mEmojisAdapter;
     private EmojiconRecentsManager mRecentsManager;
     private boolean mUseSystemDefault = false;
 
-    private static final String USE_SYSTEM_DEFAULT_KEY = "useSystemDefaults";
+    public EmojiconsView(Context context) {
+        super(context);
+    }
 
-    public static EmojiconsFragment newInstance(boolean useSystemDefault) {
-        EmojiconsFragment fragment = new EmojiconsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(USE_SYSTEM_DEFAULT_KEY, useSystemDefault);
-        fragment.setArguments(bundle);
-        return fragment;
+    public EmojiconsView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public EmojiconsView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public EmojiconsView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.emojicons, container, false);
-        final ViewPager emojisPager = (ViewPager) view.findViewById(R.id.emojis_pager);
+    protected void onFinishInflate() {
+        final ViewPager emojisPager = (ViewPager) findViewById(R.id.emojis_pager);
         emojisPager.setOnPageChangeListener(this);
         // we handle recents
         EmojiconRecents recents = this;
-        mEmojisAdapter = new EmojisPagerAdapter(getFragmentManager(), Arrays.asList(
-                EmojiconRecentsGridFragment.newInstance(mUseSystemDefault),
-                EmojiconGridFragment.newInstance(People.DATA, recents, mUseSystemDefault),
-                EmojiconGridFragment.newInstance(Nature.DATA, recents, mUseSystemDefault),
-                EmojiconGridFragment.newInstance(Objects.DATA, recents, mUseSystemDefault),
-                EmojiconGridFragment.newInstance(Places.DATA, recents, mUseSystemDefault),
-                EmojiconGridFragment.newInstance(Symbols.DATA, recents, mUseSystemDefault)
+        mEmojisAdapter = new EmojisPagerAdapter(Arrays.asList(
+                EmojiconRecentsGridView.newInstance(getContext(), this, mUseSystemDefault),
+                EmojiconGridView.newInstance(getContext(), this, People.DATA, recents, mUseSystemDefault),
+                EmojiconGridView.newInstance(getContext(), this, Nature.DATA, recents, mUseSystemDefault),
+                EmojiconGridView.newInstance(getContext(), this, Objects.DATA, recents, mUseSystemDefault),
+                EmojiconGridView.newInstance(getContext(), this, Places.DATA, recents, mUseSystemDefault),
+                EmojiconGridView.newInstance(getContext(), this, Symbols.DATA, recents, mUseSystemDefault)
         ));
         emojisPager.setAdapter(mEmojisAdapter);
 
         mEmojiTabs = new View[6];
-        mEmojiTabs[0] = view.findViewById(R.id.emojis_tab_0_recents);
-        mEmojiTabs[1] = view.findViewById(R.id.emojis_tab_1_people);
-        mEmojiTabs[2] = view.findViewById(R.id.emojis_tab_2_nature);
-        mEmojiTabs[3] = view.findViewById(R.id.emojis_tab_3_objects);
-        mEmojiTabs[4] = view.findViewById(R.id.emojis_tab_4_cars);
-        mEmojiTabs[5] = view.findViewById(R.id.emojis_tab_5_punctuation);
+        mEmojiTabs[0] = findViewById(R.id.emojis_tab_0_recents);
+        mEmojiTabs[1] = findViewById(R.id.emojis_tab_1_people);
+        mEmojiTabs[2] = findViewById(R.id.emojis_tab_2_nature);
+        mEmojiTabs[3] = findViewById(R.id.emojis_tab_3_objects);
+        mEmojiTabs[4] = findViewById(R.id.emojis_tab_4_cars);
+        mEmojiTabs[5] = findViewById(R.id.emojis_tab_5_punctuation);
         for (int i = 0; i < mEmojiTabs.length; i++) {
             final int position = i;
             mEmojiTabs[i].setOnClickListener(new View.OnClickListener() {
@@ -93,7 +103,7 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
                 }
             });
         }
-        view.findViewById(R.id.emojis_backspace).setOnTouchListener(new RepeatListener(1000, 50, new View.OnClickListener() {
+        findViewById(R.id.emojis_backspace).setOnTouchListener(new RepeatListener(1000, 50, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnEmojiconBackspaceClickedListener != null) {
@@ -103,7 +113,7 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
         }));
 
         // get last selected page
-        mRecentsManager = EmojiconRecentsManager.getInstance(view.getContext());
+        mRecentsManager = EmojiconRecentsManager.getInstance(getContext());
         int page = mRecentsManager.getRecentPage();
         // last page was recents, check if there are recents to use
         // if none was found, go to page 1
@@ -113,28 +123,22 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
 
         if (page == 0) {
             onPageSelected(page);
-        } else {
+        }
+        else {
             emojisPager.setCurrentItem(page, false);
         }
-        return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (getActivity() instanceof OnEmojiconBackspaceClickedListener) {
-            mOnEmojiconBackspaceClickedListener = (OnEmojiconBackspaceClickedListener) getActivity();
-        } else if (getParentFragment() instanceof OnEmojiconBackspaceClickedListener) {
-            mOnEmojiconBackspaceClickedListener = (OnEmojiconBackspaceClickedListener) getParentFragment();
-        } else {
-            throw new IllegalArgumentException(activity + " must implement interface " + OnEmojiconBackspaceClickedListener.class.getSimpleName());
-        }
+    public void setUseSystemDefault(boolean useSystemDefault) {
+        mUseSystemDefault = useSystemDefault;
     }
 
-    @Override
-    public void onDetach() {
-        mOnEmojiconBackspaceClickedListener = null;
-        super.onDetach();
+    public void setOnEmojiconBackspaceClickedListener(OnEmojiconBackspaceClickedListener listener) {
+        mOnEmojiconBackspaceClickedListener = listener;
+    }
+
+    public void setOnEmojiconClickedListener(EmojiconGridView.OnEmojiconClickedListener listener) {
+        mEmojisAdapter.setOnEmojiconClickedListener(listener);
     }
 
     public static void input(EditText editText, Emojicon emojicon) {
@@ -153,9 +157,9 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
 
     @Override
     public void addRecentEmoji(Context context, Emojicon emojicon) {
-        final ViewPager emojisPager = (ViewPager) getView().findViewById(R.id.emojis_pager);
-        EmojiconRecentsGridFragment fragment = (EmojiconRecentsGridFragment) mEmojisAdapter.instantiateItem(emojisPager, 0);
-        fragment.addRecentEmoji(context, emojicon);
+        final ViewPager emojisPager = (ViewPager) findViewById(R.id.emojis_pager);
+        EmojiconRecentsGridView grid = (EmojiconRecentsGridView) mEmojisAdapter.instantiateItem(emojisPager, 0);
+        grid.addRecentEmoji(context, emojicon);
     }
 
     public static void backspace(EditText editText) {
@@ -193,22 +197,48 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
     public void onPageScrollStateChanged(int i) {
     }
 
-    private static class EmojisPagerAdapter extends FragmentStatePagerAdapter {
-        private List<EmojiconGridFragment> fragments;
+    private static class EmojisPagerAdapter extends PagerAdapter {
+        private List<EmojiconGridView> views;
 
-        public EmojisPagerAdapter(FragmentManager fm, List<EmojiconGridFragment> fragments) {
-            super(fm);
-            this.fragments = fragments;
+        public EmojisPagerAdapter(List<EmojiconGridView> views) {
+            this.views = views;
+        }
+
+        public void setOnEmojiconClickedListener(EmojiconGridView.OnEmojiconClickedListener listener) {
+            for (EmojiconGridView view : views) {
+                view.setOnEmojiconClickedListener(listener);
+            }
         }
 
         @Override
-        public Fragment getItem(int i) {
-            return fragments.get(i);
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            View view = views.get(position);
+            container.removeView(view);
         }
 
         @Override
         public int getCount() {
-            return fragments.size();
+            return views.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View view = views.get(position);
+            if (view.getParent() == null)
+                container.addView(view);
+            return view;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver observer) {
+            if (observer != null) {
+                super.unregisterDataSetObserver(observer);
+            }
         }
     }
 
@@ -282,15 +312,5 @@ public class EmojiconsFragment extends Fragment implements ViewPager.OnPageChang
 
     public interface OnEmojiconBackspaceClickedListener {
         void onEmojiconBackspaceClicked(View v);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mUseSystemDefault = getArguments().getBoolean(USE_SYSTEM_DEFAULT_KEY);
-        } else {
-            mUseSystemDefault = false;
-        }
     }
 }
