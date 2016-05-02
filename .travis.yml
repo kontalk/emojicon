@@ -11,12 +11,13 @@ env:
 
 android:
   components:
-  - tools
-  - platform-tools
-  - extra-android-support
-  - extra-android-m2repository
-  - android-22
-  - build-tools-22.0.1
+    - tools
+    - platform-tools
+    - extra-android-support
+    - extra-android-m2repository
+    - android-21
+    - build-tools-21.1.1
+
 install:
   - ./gradlew dependencies
 
