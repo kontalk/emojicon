@@ -73,6 +73,7 @@ public class EmojiconsView extends RelativeLayout implements ViewPager.OnPageCha
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         final ViewPager emojisPager = (ViewPager) findViewById(R.id.emojis_pager);
         emojisPager.setOnPageChangeListener(this);
         // we handle recents

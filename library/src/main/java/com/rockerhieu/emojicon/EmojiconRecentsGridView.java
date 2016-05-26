@@ -57,6 +57,7 @@ public class EmojiconRecentsGridView extends EmojiconGridView implements Emojico
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         EmojiconRecentsManager recents = EmojiconRecentsManager
             .getInstance(getContext());
         super.init(recents);
