@@ -12,7 +12,7 @@ android:
   - extra-android-support
   - extra-android-m2repository
   - android-24
-  - build-tools-24.0.0
+  - build-tools-24.0.1
 install:
   - ./gradlew dependencies
 
