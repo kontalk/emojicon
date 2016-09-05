@@ -5,8 +5,7 @@ android {
     buildToolsVersion '24.0.2'
 
     defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 22
+        minSdkVersion 9
     }
     lintOptions {
         abortOnError false
