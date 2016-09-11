@@ -1600,6 +1600,10 @@ public final class EmojiconHandler {
         addEmojis(context, text, emojiSize, emojiAlignment, textSize, 0, -1, useSystemDefault);
     }
 
+    public static void addEmojis(Context context, Spannable text, int emojiSize, int emojiAlignment, int textSize, int index, int length, boolean useSystemDefault) {
+        addEmojis(context, text, emojiSize, emojiAlignment, textSize, index, length, true, useSystemDefault);
+    }
+
     /**
      * Convert emoji characters of the given Spannable to the according emojicon.
      *
@@ -1612,7 +1616,7 @@ public final class EmojiconHandler {
      * @param length
      * @param useSystemDefault
      */
-    public static void addEmojis(Context context, Spannable text, int emojiSize, int emojiAlignment, int textSize, int index, int length, boolean useSystemDefault) {
+    public static void addEmojis(Context context, Spannable text, int emojiSize, int emojiAlignment, int textSize, int index, int length, boolean removeAll, boolean useSystemDefault) {
         if (useSystemDefault) {
             return;
         }
@@ -1622,9 +1626,11 @@ public final class EmojiconHandler {
         int textLengthToProcess = length < 0 || length >= textLengthToProcessMax ? textLength : (length + index);
 
         // remove spans throughout all text
-        EmojiconSpan[] oldSpans = text.getSpans(0, textLength, EmojiconSpan.class);
-        for (int i = 0; i < oldSpans.length; i++) {
-            text.removeSpan(oldSpans[i]);
+        if (removeAll) {
+            EmojiconSpan[] oldSpans = text.getSpans(0, textLength, EmojiconSpan.class);
+            for (int i = 0; i < oldSpans.length; i++) {
+                text.removeSpan(oldSpans[i]);
+            }
         }
 
         int skip;

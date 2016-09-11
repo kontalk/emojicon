@@ -59,7 +59,7 @@ public class EmojiconEditText extends AppCompatEditText {
 
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        updateText();
+        updateText(start, lengthAfter, false);
     }
 
     /**
@@ -72,7 +72,11 @@ public class EmojiconEditText extends AppCompatEditText {
     }
 
     private void updateText() {
-        EmojiconHandler.addEmojis(getContext(), getText(), mEmojiconSize, mEmojiconAlignment, mEmojiconTextSize, mUseSystemDefault);
+        updateText(0, -1, true);
+    }
+
+    private void updateText(int index, int length, boolean removeAll) {
+        EmojiconHandler.addEmojis(getContext(), getText(), mEmojiconSize, mEmojiconAlignment, mEmojiconTextSize, index, length, removeAll, mUseSystemDefault);
     }
 
     /**
