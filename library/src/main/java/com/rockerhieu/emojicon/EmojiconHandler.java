@@ -1637,8 +1637,8 @@ public final class EmojiconHandler {
         // remove spans throughout all text
         if (removeAll) {
             EmojiconSpan[] oldSpans = text.getSpans(0, textLength, EmojiconSpan.class);
-            for (int i = 0; i < oldSpans.length; i++) {
-                text.removeSpan(oldSpans[i]);
+            for (EmojiconSpan oldSpan : oldSpans) {
+                text.removeSpan(oldSpan);
             }
         }
 
@@ -1693,7 +1693,7 @@ public final class EmojiconHandler {
                         }
                         skip += followSkip;
 
-                    } else if(sEmojiModifiersMap.get(followUnicode, 0) > 0){
+                    } else if (sEmojiModifiersMap.get(followUnicode, 0) > 0) {
                         //handle other emoji modifiers
                         int followSkip = Character.charCount(followUnicode);
 
@@ -1720,10 +1720,8 @@ public final class EmojiconHandler {
                             icon = resourceId;
                         }
                         skip += followSkip;
-                    }else{
-                        int followSkip = Character.charCount(followUnicode);
-                        skip += followSkip;
-                    }                }
+                    }
+                }
             }
 
             if (icon > 0) {
