@@ -18,7 +18,7 @@ package com.rockerhieu.emojicon;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.SpannableStringBuilder;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.DynamicDrawableSpan;
 import android.util.AttributeSet;
@@ -69,9 +69,12 @@ public class EmojiconTextView extends TextView {
     @Override
     public void setText(CharSequence text, BufferType type) {
         if (!TextUtils.isEmpty(text)) {
-            SpannableStringBuilder builder = new SpannableStringBuilder(text);
-            EmojiconHandler.addEmojis(getContext(), builder, mEmojiconSize, mEmojiconAlignment, mEmojiconTextSize, mTextStart, mTextLength, mUseSystemDefault);
-            text = builder;
+            Spannable spanned = Spannable.Factory.getInstance().newSpannable(text);
+            EmojiconHandler.addEmojis(getContext(), spanned,
+                mEmojiconSize, mEmojiconAlignment, mEmojiconTextSize,
+                mTextStart, mTextLength,
+                false, mUseSystemDefault);
+            text = spanned;
         }
         super.setText(text, type);
     }
